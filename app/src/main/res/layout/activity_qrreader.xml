@@ -11,4 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <org.ieee.ants.PointsOverlayView
+        android:id="@+id/points_overlay_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
 </RelativeLayout>
