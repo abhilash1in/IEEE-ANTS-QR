@@ -4,14 +4,18 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,39 +25,103 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button captureButton = (Button) findViewById(R.id.captureButtonView);
-        captureButton.setOnClickListener(new View.OnClickListener() {
+        Button attendeeButton = (Button) findViewById(R.id.attendeeCapture);
+        attendeeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                    // Should we show an explanation?
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CAMERA)) {
-
-                        // Show an explanation to the user *asynchronously* -- don't block
-                        // this thread waiting for the user's response! After the user
-                        // sees the explanation, try again to request the permission.
-
-                        Toast.makeText(MainActivity.this, "This app needs Camera permission to work!", Toast.LENGTH_SHORT).show();
-                        ActivityCompat.requestPermissions(MainActivity.this,
-                                new String[]{Manifest.permission.CAMERA},
-                                MY_PERMISSIONS_REQUEST_CAMERA);
-
-                    }else{
-                        // No explanation needed, we can request the permission.
-                        ActivityCompat.requestPermissions(MainActivity.this,
-                                new String[]{Manifest.permission.CAMERA},
-                                MY_PERMISSIONS_REQUEST_CAMERA);
-
-                        // MY_PERMISSIONS_REQUEST_CAMERA is an
-                        // app-defined int constant. The callback method gets the
-                        // result of the request.
-                    }
-                }
-                else{
-                    startActivity(new Intent(MainActivity.this,QRReaderActivity.class));
-                }
+                StartQRReader(1);
             }
         });
+        Button execButton = (Button) findViewById(R.id.execomCapture);
+        execButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StartQRReader(0);
+            }
+        });
+
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    public void showBaseUrlDialog()
+    {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("Set Base Server Url");
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        input.setText(R.string.defaultUrl);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String value = input.getText().toString();
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("baseurl", value).apply();
+
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        //respond to menu item selection
+        switch (item.getItemId()) {
+            case R.id.baseurlmenu:
+                showBaseUrlDialog();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected void StartQRReader(int attendee)
+    {
+            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CAMERA)) {
+
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+
+                    Toast.makeText(MainActivity.this, "This app needs Camera permission to work!", Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.CAMERA},
+                            MY_PERMISSIONS_REQUEST_CAMERA);
+
+                }else{
+                    // No explanation needed, we can request the permission.
+                    ActivityCompat.requestPermissions(MainActivity.this,
+                            new String[]{Manifest.permission.CAMERA},
+                            MY_PERMISSIONS_REQUEST_CAMERA);
+
+                    // MY_PERMISSIONS_REQUEST_CAMERA is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+            }
+            else{
+                Intent QRIntent = new Intent(this,QRReaderActivity.class);
+                QRIntent.putExtra("type",attendee);
+                startActivity(QRIntent);
+        }
     }
 
     @Override

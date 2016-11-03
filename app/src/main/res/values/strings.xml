@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ANTS</string>
+    <string name="set_baseurl">Set BaseURL</string>
+    <string name="defaultUrl">http://10.0.0.3:3000/</string>
 </resources>

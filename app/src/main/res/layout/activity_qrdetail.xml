@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_qrdetail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="org.ieee.ants.QRDetailActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/resultText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:lines="50"
+            android:scrollHorizontally="false"
+            android:scrollbars="vertical"
+            tools:text="{\'details\':{\'Country\':\'India\',\'City\':\'Bangalore\',\'Affiliation (College\/University\/Organisation)\':\'PESIT\',\'Phone Number\':\'7829223000\'},\'status\':\'attending\',\'ticketNo\':\'1105\',\'checkin\':\'no\',\'email\':\'keerthana7972@gmail.com\',\'name\':\'Keerthana Ravi\',\'ticketId\':\'TKAIBJIGB\',\'ticketName\':\'Attendee Registration - Student Non Member\'}"
+            android:textSize="24sp" />
+
+    </ScrollView>
+</RelativeLayout>

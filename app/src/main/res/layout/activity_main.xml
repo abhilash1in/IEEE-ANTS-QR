@@ -10,10 +10,21 @@
     tools:context="org.ieee.ants.MainActivity">
 
     <Button
-        android:id="@+id/captureButtonView"
-        android:layout_width="wrap_content"
+        android:id="@+id/attendeeCapture"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Capture"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        android:text="Attendee"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="ExecCom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:id="@+id/execomCapture"
+        android:layout_below="@+id/attendeeCapture"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
