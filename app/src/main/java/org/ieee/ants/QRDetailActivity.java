@@ -1,5 +1,6 @@
 package org.ieee.ants;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class QRDetailActivity extends AppCompatActivity {
     private String ticketNo;
     private String url;
     String ticketNumber,ticketType,attendeeName;
+    ProgressDialog loading = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +115,10 @@ public class QRDetailActivity extends AppCompatActivity {
 
         client = new OkHttpClient();
         try {
+            loading = new ProgressDialog(this);
+            loading.setCancelable(false);
+            loading.setMessage("loading..");
+            loading.show();
             retrieveFromDB();
         } catch (Exception e) {
             e.printStackTrace();
@@ -194,11 +200,34 @@ public class QRDetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("Failed", e.getMessage());
+                mDetail = "Error : Check connection";
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(loading != null && loading.isShowing())
+                            loading.dismiss();
+                        ticketNumberView.setText(mDetail);
+                        ticketTypeView.setText(mDetail);
+
+                        issueKit.setEnabled(false);
+                        issueLunch.setEnabled(false);
+                        issueBanquet.setEnabled(false);
+                    }
+
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 Log.d(TAG, "on response");
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(loading != null && loading.isShowing())
+                            loading.dismiss();
+                    }
+
+                });
                 if (!response.isSuccessful()) {
                     Log.v("error", "Code: " + response.code() + ", Error message: " + response.message());
                     mDetail = "404 Not Found";
