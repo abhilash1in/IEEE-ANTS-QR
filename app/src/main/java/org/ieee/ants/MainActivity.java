@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 R.array.days, android.R.layout.simple_spinner_item);
         dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dateSpinner.setAdapter(dateAdapter);
-
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("baseurl", getString(R.string.defaultUrl)).apply();
         dateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
