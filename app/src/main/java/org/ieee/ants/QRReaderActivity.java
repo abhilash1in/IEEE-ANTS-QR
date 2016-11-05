@@ -59,6 +59,7 @@ public class QRReaderActivity extends AppCompatActivity implements QRCodeReaderV
     protected void onResume() {
         super.onResume();
         qrView.startCamera();
+        pointsOverlayView.setPoints(null);
     }
 
     @Override

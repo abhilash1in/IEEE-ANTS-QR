@@ -30,6 +30,7 @@ public class QRDetailActivity extends AppCompatActivity {
     static final String TAG = "QRDetailActivity";
     public static String baseUrl,dateSelected;
     private int attendee;
+    private String regCategory;
     private TextView ticketNumberView,ticketTypeView,attendeeNameView,claimStatusView,detailTextView;
     private Button issueKit,issueLunch,issueBanquet,viewDetail;
     private String mDetail;
@@ -69,9 +70,12 @@ public class QRDetailActivity extends AppCompatActivity {
         if (attendee == 1) {
             getSupportActionBar().setTitle("Attendee Detail");
             url = baseUrl + "getTicket";
+            regCategory= "reg";
         } else {
             getSupportActionBar().setTitle("Member Detail");
             url = baseUrl + "oticket";
+            regCategory = "org";
+
         }
 
         issueKit.setEnabled(false);
@@ -122,6 +126,7 @@ public class QRDetailActivity extends AppCompatActivity {
                 .add("ticketNo",ticketNumber)
                 .add("claimType",claimType)
                 .add("claimDay",claimDay)
+                .add("category",regCategory)
                 .build();
         Request request = new Request.Builder()
                 .url(baseUrl+"claim")
