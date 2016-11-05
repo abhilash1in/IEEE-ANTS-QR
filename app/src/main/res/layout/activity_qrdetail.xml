@@ -10,22 +10,32 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="org.ieee.ants.QRDetailActivity">
 
+
     <TextView
-        android:id="@+id/ticketNumber"
+        android:id="@+id/attendeeName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Ticket Number"
+        android:text="Name"
         android:textSize="30sp" />
 
     <TextView
         android:id="@+id/ticketType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ticketNumber"
+        android:layout_below="@id/attendeeName"
         android:gravity="center_horizontal"
         android:text="Ticket Type"
         android:textSize="20sp" />
+    <TextView
+        android:id="@+id/ticketNumber"
+        android:layout_width="match_parent"
+        android:layout_below="@id/ticketType"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Ticket Number"
+        android:textSize="10sp" />
+
 
     <Button
         android:id="@+id/addKit"

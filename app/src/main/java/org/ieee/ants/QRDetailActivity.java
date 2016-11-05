@@ -39,7 +39,7 @@ public class QRDetailActivity extends AppCompatActivity {
     OkHttpClient client;
     private String ticketNo;
     private String url;
-    String ticketNumber,ticketType;
+    String ticketNumber,ticketType,attendeeName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,6 +199,7 @@ public class QRDetailActivity extends AppCompatActivity {
                         final JSONObject result = responseJsonObject.getJSONObject("res");
                         mDetail = result.toString(4);
                         ticketNumber = result.getString("ticketNo");
+                        attendeeName = result.getString("name");
                         ticketType = result.getString("ticketName");
                         mHandler.post(new Runnable() {
                             @Override
