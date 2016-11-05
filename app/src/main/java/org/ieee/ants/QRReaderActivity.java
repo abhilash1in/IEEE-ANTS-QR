@@ -44,7 +44,8 @@ public class QRReaderActivity extends AppCompatActivity implements QRCodeReaderV
     public void onQRCodeRead(String text, PointF[] points) {
         //called when QR code is decoded
         pointsOverlayView.setPoints(points);
-        Toast.makeText(QRReaderActivity.this, text, Toast.LENGTH_SHORT).show();
+
+        //Toast.makeText(QRReaderActivity.this, text, Toast.LENGTH_SHORT).show();
 
         //start intent for DetailActivity
         Intent QRDetail = new Intent(this,QRDetailActivity.class);
