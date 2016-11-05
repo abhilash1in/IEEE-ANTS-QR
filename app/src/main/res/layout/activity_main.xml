@@ -19,12 +19,33 @@
         android:layout_alignParentStart="true" />
 
     <Button
-        android:text="ExecCom"
+        android:text="Organisers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="12dp"
         android:id="@+id/execomCapture"
         android:layout_below="@+id/attendeeCapture"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Select Date:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:id="@+id/textView"
+        android:textSize="20sp"
+        android:layout_below="@+id/execomCapture"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/black" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/dateSpinnerView"
+        android:entries="@array/days"
+        android:textAlignment="center"
+        android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 </RelativeLayout>

@@ -14,8 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,7 +43,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Spinner dateSpinner = (Spinner) findViewById(R.id.dateSpinnerView);
+        ArrayAdapter<CharSequence> dateAdapter = ArrayAdapter.createFromResource(this,
+                R.array.days, android.R.layout.simple_spinner_item);
+        dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dateSpinner.setAdapter(dateAdapter);
 
+        dateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                setDatePref(selectedItem);
+            } // to close the onItemSelected
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
     }
 
 
@@ -50,6 +70,12 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.options_menu, menu);
         return true;
     }
+
+    public void setDatePref(String date)
+    {
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("date", date).apply();
+    }
+
 
     public void showBaseUrlDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -71,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-            // Canceled.
+        // Canceled.
             }
         });
 

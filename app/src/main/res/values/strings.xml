@@ -2,4 +2,11 @@
     <string name="app_name">ANTS</string>
     <string name="set_baseurl">Set BaseURL</string>
     <string name="defaultUrl">http://10.0.0.3:3000/</string>
+    <string name="defaultDate">6th Nov</string>
+    <string-array name="days">
+        <item>6th Nov</item>
+        <item>7th Nov</item>
+        <item>8th Nov</item>
+        <item>9th Nov</item>
+    </string-array>
 </resources>

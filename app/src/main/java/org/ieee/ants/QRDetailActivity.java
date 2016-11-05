@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,10 +28,10 @@ import okhttp3.Response;
 
 public class QRDetailActivity extends AppCompatActivity {
     static final String TAG = "QRDetailActivity";
-    public static String baseUrl;
+    public static String baseUrl,dateSelected;
     private int attendee;
-    private TextView ticketNumberView,ticketTypeView,attendeeNameView;
-    private Button issueKit,issueLunch,issueBanquet;
+    private TextView ticketNumberView,ticketTypeView,attendeeNameView,claimStatusView,detailTextView;
+    private Button issueKit,issueLunch,issueBanquet,viewDetail;
     private String mDetail;
     private Handler mHandler;
     OkHttpClient client;
@@ -49,32 +47,12 @@ public class QRDetailActivity extends AppCompatActivity {
         ticketNumberView = (TextView)  findViewById(R.id.ticketNumber);
         ticketTypeView = (TextView)  findViewById(R.id.ticketType);
         attendeeNameView = (TextView)  findViewById(R.id.attendeeName);
+        claimStatusView = (TextView)  findViewById(R.id.claimResultView);
         issueKit = (Button) findViewById(R.id.addKit);
         issueLunch = (Button) findViewById(R.id.addLunch);
         issueBanquet = (Button) findViewById(R.id.addBanquet);
-
-        issueKit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                claim(ticketNumber,ticketType,"kit");
-            }
-        });
-
-        issueLunch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //show list to select which day
-                //claim(ticketNumber,"lunch",dayStringForChosenDay);
-            }
-        });
-
-        issueBanquet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //show list to select which day
-                //claim(ticketNumber,"banquet",dayStringForChosenDay);
-            }
-        });
+        viewDetail = (Button) findViewById(R.id.viewDetails);
+        detailTextView = (TextView) findViewById(R.id.detailTextView);
 
         mHandler = new Handler(Looper.getMainLooper());
 
@@ -86,6 +64,7 @@ public class QRDetailActivity extends AppCompatActivity {
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         baseUrl = sharedPrefs.getString("baseurl", getString(R.string.defaultUrl));
+        dateSelected = sharedPrefs.getString("date", getString(R.string.defaultDate));
 
         if (attendee == 1) {
             getSupportActionBar().setTitle("Attendee Detail");
@@ -94,6 +73,39 @@ public class QRDetailActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Member Detail");
             url = baseUrl + "oticket";
         }
+
+        issueKit.setEnabled(false);
+        issueLunch.setEnabled(false);
+        issueBanquet.setEnabled(false);
+        viewDetail.setEnabled(false);
+
+        issueKit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                claim(ticketNumber,"kit",dateSelected);
+            }
+        });
+
+        issueLunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                claim(ticketNumber,"lunch",dateSelected);
+            }
+        });
+
+        issueBanquet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                claim(ticketNumber,"banquet",dateSelected);
+            }
+        });
+
+        viewDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                 detailTextView.setText(mDetail);
+            }
+        });
 
         client = new OkHttpClient();
         try {
@@ -104,6 +116,8 @@ public class QRDetailActivity extends AppCompatActivity {
     }
 
     public void claim(final String ticketNumber, final String claimType, final String claimDay){
+
+        mHandler = new Handler(Looper.getMainLooper());
         RequestBody requestBody = new FormBody.Builder()
                 .add("ticketNo",ticketNumber)
                 .add("claimType",claimType)
@@ -127,26 +141,34 @@ public class QRDetailActivity extends AppCompatActivity {
                         public void run() {
                             Log.v("error", "Code: " + response.code() + ", Error message: " + response.message());
                             try{
-                                JSONObject responseJsonObject = new JSONObject(response.body().toString());
+                                String JsonString = response.body().string();
+                                JSONObject responseJsonObject = new JSONObject(JsonString);
                                 String failReason = responseJsonObject.getString("res");
-                                Toast.makeText(QRDetailActivity.this, "Claim FAILED for "+ claimType+": "+failReason, Toast.LENGTH_SHORT).show();
-                                //todo display red cross with failReason message
+                                //display failReason message
+                                claimStatusView.setText("Status for " + claimType +": " + failReason);
+
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
                         }
                     });
                 }else{
-                    //todo show green tick
-                    String JsonString = response.body().string();
-                    Log.d("Success", JsonString);
-                    try{
-                        JSONObject responseJsonObject = new JSONObject(JsonString);
-                        String responseMessage = responseJsonObject.getString("res");
-                        Toast.makeText(QRDetailActivity.this, "Claim for "+ claimType+": "+responseMessage, Toast.LENGTH_SHORT).show();
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            //todo show green tick
+                            try{
+                                String JsonString = response.body().string();
+                                Log.d("SuccessClaim", JsonString);
+                                JSONObject responseJsonObject = new JSONObject(JsonString);
+                                String responseMessage = responseJsonObject.getString("res");
+                                //show success
+                                claimStatusView.setText("Status for " + claimType +": " + responseMessage);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -206,6 +228,10 @@ public class QRDetailActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // detailText.setText(mDetail);
+                                issueKit.setEnabled(true);
+                                issueLunch.setEnabled(true);
+                                issueBanquet.setEnabled(true);
+                                viewDetail.setEnabled(true);
                                 attendeeNameView.setText(attendeeName);
                                 ticketNumberView.setText(ticketNumber);
                                 ticketTypeView.setText(ticketType);
