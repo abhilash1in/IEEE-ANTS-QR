@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void showBaseUrlDialog()
-    {
+    public void showBaseUrlDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setTitle("Set Base Server Url");
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
+// Canceled.
             }
         });
 
@@ -91,43 +90,41 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void StartQRReader(int attendee)
-    {
-            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CAMERA)) {
+    protected void StartQRReader(int attendee) {
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CAMERA)) {
 
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
 
-                    Toast.makeText(MainActivity.this, "This app needs Camera permission to work!", Toast.LENGTH_SHORT).show();
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.CAMERA},
-                            MY_PERMISSIONS_REQUEST_CAMERA);
+                Toast.makeText(MainActivity.this, "This app needs Camera permission to work!", Toast.LENGTH_SHORT).show();
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.CAMERA},
+                        MY_PERMISSIONS_REQUEST_CAMERA);
 
-                }else{
-                    // No explanation needed, we can request the permission.
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.CAMERA},
-                            MY_PERMISSIONS_REQUEST_CAMERA);
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.CAMERA},
+                        MY_PERMISSIONS_REQUEST_CAMERA);
 
-                    // MY_PERMISSIONS_REQUEST_CAMERA is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
-                }
+                // MY_PERMISSIONS_REQUEST_CAMERA is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
             }
-            else{
-                Intent QRIntent = new Intent(this,QRReaderActivity.class);
-                QRIntent.putExtra("type",attendee);
-                startActivity(QRIntent);
+        } else {
+            Intent QRIntent = new Intent(this, QRReaderActivity.class);
+            QRIntent.putExtra("type", attendee);
+            startActivity(QRIntent);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_CAMERA : {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -135,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     // permission was granted, yay! Do the
                     // camera-related task you need to do.
 
-                    startActivity(new Intent(MainActivity.this,QRReaderActivity.class));
+                    startActivity(new Intent(MainActivity.this, QRReaderActivity.class));
 
                 } else {
                     // permission denied, boo! Disable the
