@@ -49,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 R.array.days, android.R.layout.simple_spinner_item);
         dateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dateSpinner.setAdapter(dateAdapter);
-        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("baseurl", getString(R.string.defaultUrl)).apply();
-        setDatePref("6th Nov");
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPrefs.edit().putString("baseurl", getString(R.string.defaultUrl)).apply();
+        //setDatePref(getString(R.string.defaultDate));
         dateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        dateSpinner.setSelection(dateAdapter.getPosition(sharedPrefs.getString("date", getString(R.string.defaultDate))));
     }
 
 

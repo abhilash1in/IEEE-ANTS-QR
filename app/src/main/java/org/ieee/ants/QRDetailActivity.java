@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -41,6 +42,8 @@ public class QRDetailActivity extends AppCompatActivity {
     private String url;
     String ticketNumber,ticketType,attendeeName;
     ProgressDialog loading = null;
+    ProgressDialog loadingClaim = null;
+    ImageView claimStatusImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class QRDetailActivity extends AppCompatActivity {
         ticketTypeView = (TextView)  findViewById(R.id.ticketType);
         attendeeNameView = (TextView)  findViewById(R.id.attendeeName);
         claimStatusView = (TextView)  findViewById(R.id.claimResultView);
+        claimStatusImageView = (ImageView) findViewById(R.id.claimResultImageView);
         issueKit = (Button) findViewById(R.id.addKit);
         issueLunch = (Button) findViewById(R.id.addLunch);
         issueBanquet = (Button) findViewById(R.id.addBanquet);
@@ -85,6 +89,10 @@ public class QRDetailActivity extends AppCompatActivity {
         issueBanquet.setEnabled(false);
         viewDetail.setEnabled(false);
 
+        loadingClaim = new ProgressDialog(this);
+        loadingClaim.setCancelable(false);
+        loadingClaim.setMessage("loading..");
+
         issueKit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +117,14 @@ public class QRDetailActivity extends AppCompatActivity {
         viewDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 detailTextView.setText(mDetail);
+                if(detailTextView.getText().toString().isEmpty()) {
+                    detailTextView.setText(mDetail);
+                    viewDetail.setText("Hide Full Details");
+                }
+                else {
+                    detailTextView.setText("");
+                    viewDetail.setText("View Full Details");
+                }
             }
         });
 
@@ -126,7 +141,10 @@ public class QRDetailActivity extends AppCompatActivity {
     }
 
     public void claim(final String ticketNumber, final String claimType, final String claimDay){
-
+        if(loadingClaim != null && !loadingClaim.isShowing()){
+            loadingClaim.show();
+        }
+        claimStatusImageView.setImageDrawable(null);
         mHandler = new Handler(Looper.getMainLooper());
         RequestBody requestBody = new FormBody.Builder()
                 .add("ticketNo",ticketNumber)
@@ -142,10 +160,29 @@ public class QRDetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("Failed", e.getMessage());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(loadingClaim != null && loadingClaim.isShowing()){
+                            loadingClaim.dismiss();
+                        }
+                        claimStatusView.setText("Error - Check Connection");
+                        claimStatusImageView.setImageResource(R.drawable.exclamation);
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(loadingClaim != null && loadingClaim.isShowing()){
+                            loadingClaim.dismiss();
+                        }
+                    }
+                });
+
                 if(!response.isSuccessful()){
                     mHandler.post(new Runnable() {
                         @Override
@@ -157,6 +194,7 @@ public class QRDetailActivity extends AppCompatActivity {
                                 String failReason = responseJsonObject.getString("res");
                                 //display failReason message
                                 claimStatusView.setText("Status for " + claimType +": " + failReason);
+                                claimStatusImageView.setImageResource(R.drawable.exclamation);
 
                             }catch (Exception e){
                                 e.printStackTrace();
@@ -175,6 +213,7 @@ public class QRDetailActivity extends AppCompatActivity {
                                 String responseMessage = responseJsonObject.getString("res");
                                 //show success
                                 claimStatusView.setText("Status for " + claimType +": " + responseMessage);
+                                claimStatusImageView.setImageResource(R.drawable.tick);
                             }catch (Exception e){
                                 e.printStackTrace();
                             }

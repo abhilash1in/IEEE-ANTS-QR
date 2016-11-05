@@ -82,20 +82,22 @@
             android:layout_below="@+id/viewDetails"
             android:layout_centerHorizontal="true" />
 
-        <ScrollView
+        <ImageView
+            android:id="@+id/claimResultImageView"
+            android:layout_below="@id/claimResultView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="12dp"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            tools:text="detailsview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/claimResultView"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/claimResultImageView"
             android:layout_marginTop="12dp"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
-
-            <TextView
-                tools:text="detailsview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/detailTextView" />
-        </ScrollView>
+            android:layout_alignParentEnd="true"
+            android:id="@+id/detailTextView" />
 
     </RelativeLayout>
 </ScrollView>
