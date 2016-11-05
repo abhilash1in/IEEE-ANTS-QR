@@ -32,7 +32,7 @@ public class QRDetailActivity extends AppCompatActivity {
     static final String TAG = "QRDetailActivity";
     public static String baseUrl;
     private int attendee;
-    private TextView ticketNumberView,ticketTypeView;
+    private TextView ticketNumberView,ticketTypeView,attendeeNameView;
     private Button issueKit,issueLunch,issueBanquet;
     private String mDetail;
     private Handler mHandler;
@@ -48,6 +48,7 @@ public class QRDetailActivity extends AppCompatActivity {
 
         ticketNumberView = (TextView)  findViewById(R.id.ticketNumber);
         ticketTypeView = (TextView)  findViewById(R.id.ticketType);
+        attendeeNameView = (TextView)  findViewById(R.id.attendeeName);
         issueKit = (Button) findViewById(R.id.addKit);
         issueLunch = (Button) findViewById(R.id.addLunch);
         issueBanquet = (Button) findViewById(R.id.addBanquet);
@@ -205,6 +206,7 @@ public class QRDetailActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // detailText.setText(mDetail);
+                                attendeeNameView.setText(attendeeName);
                                 ticketNumberView.setText(ticketNumber);
                                 ticketTypeView.setText(ticketType);
                             }
