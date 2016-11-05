@@ -3,6 +3,7 @@ package org.ieee.ants;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -80,12 +81,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void showBaseUrlDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String baseUrl = sharedPrefs.getString("baseurl", getString(R.string.defaultUrl));
 
         alert.setTitle("Set Base Server Url");
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
-        input.setText(R.string.defaultUrl);
+        input.setText(baseUrl);
         alert.setView(input);
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -93,6 +96,13 @@ public class MainActivity extends AppCompatActivity {
                 String value = input.getText().toString();
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("baseurl", value).apply();
 
+            }
+        });
+
+        alert.setNeutralButton("Reset", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("baseurl", getString(R.string.defaultUrl)).apply();
             }
         });
 
