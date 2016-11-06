@@ -133,10 +133,26 @@ public class QRDetailActivity extends AppCompatActivity {
             loading = new ProgressDialog(this);
             loading.setCancelable(false);
             loading.setMessage("loading..");
-            loading.show();
+            if(loading != null && !loading.isShowing())
+                loading.show();
             retrieveFromDB();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(loading != null && loading.isShowing())
+        {
+            loading.dismiss();
+            loading = null;
+        }
+        if(loadingClaim != null && loadingClaim.isShowing())
+        {
+            loadingClaim.dismiss();
+            loadingClaim = null;
         }
     }
 
@@ -165,6 +181,7 @@ public class QRDetailActivity extends AppCompatActivity {
                     public void run() {
                         if(loadingClaim != null && loadingClaim.isShowing()){
                             loadingClaim.dismiss();
+                            loadingClaim = null;
                         }
                         claimStatusView.setText("Error - Check Connection");
                         claimStatusImageView.setImageResource(R.drawable.exclamation);
@@ -179,6 +196,7 @@ public class QRDetailActivity extends AppCompatActivity {
                     public void run() {
                         if(loadingClaim != null && loadingClaim.isShowing()){
                             loadingClaim.dismiss();
+                            loadingClaim = null;
                         }
                     }
                 });
@@ -244,7 +262,10 @@ public class QRDetailActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if(loading != null && loading.isShowing())
+                        {
                             loading.dismiss();
+                            loading = null;
+                        }
                         ticketNumberView.setText(mDetail);
                         ticketTypeView.setText(mDetail);
 
@@ -263,7 +284,10 @@ public class QRDetailActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if(loading != null && loading.isShowing())
+                        {
                             loading.dismiss();
+                            loading = null;
+                        }
                     }
 
                 });
